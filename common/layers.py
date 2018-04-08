@@ -61,7 +61,9 @@ class Affine:
     def backward(self, dout):
         dx = np.dot(dout, self.W.T)
         self.dW = np.dot(self.x.T, dout)
+        print(self.dW[101])
         self.db = np.sum(dout, axis=0)
+        #print(self.dW)
         
         dx = dx.reshape(*self.original_x_shape)  # 입력 데이터 모양 변경(텐서 대응)
         return dx
@@ -82,8 +84,10 @@ class SoftmaxWithLoss:
 
     def backward(self, dout=1):
         batch_size = self.t.shape[0]
+
         if self.t.size == self.y.size: # 정답 레이블이 원-핫 인코딩 형태일 때
             dx = (self.y - self.t) / batch_size
+        
         else:
             dx = self.y.copy()
             dx[np.arange(batch_size), self.t] -= 1
